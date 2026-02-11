@@ -6,8 +6,10 @@ export default async function Home() {
   return (
     <div className="">
       <main className="">
-        <h1 className="text-2xl font-bold mb-4">Random Joke</h1>
-        <p className="text-lg">{joke.joke}</p>
+        <h1 className="mb-4 text-2xl font-bold">Random Joke</h1>
+        <p className="text-lg">
+          {joke.success ? joke.data.joke : "Failed to load joke"}
+        </p>
       </main>
     </div>
   );
