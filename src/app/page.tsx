@@ -1,11 +1,7 @@
-import { JokeApi } from "@/lib/server/api/joke/joke-api";
+import { fetchRandomJoke } from "@/lib/server/actions/joke/joke-server-actions";
 
 export default async function Home() {
-  const randomJoke = async () => {
-    return await JokeApi.fetchRandomJoke();
-  };
-
-  const joke = await randomJoke();
+  const joke = await fetchRandomJoke();
 
   return (
     <div className="">
