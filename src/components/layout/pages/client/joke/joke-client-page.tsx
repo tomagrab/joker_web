@@ -4,17 +4,27 @@ import { Button } from "@/components/ui/button";
 import useJoke from "@/hooks/joke/use-joke";
 import { ApiResult } from "@/lib/types/api/common/api-common-types";
 import { JokeType } from "@/lib/types/api/joke/joke-types";
+import { LoaderIcon, TriangleAlertIcon } from "lucide-react";
 
 type JokeClientPageProps = {
   serverJoke: Promise<ApiResult<JokeType>>;
 };
 
 export default function JokeClientPage({ serverJoke }: JokeClientPageProps) {
-  const { joke, fetchNewJoke } = useJoke({ serverJoke });
+  const { joke, fetchNewJoke, loading, error } = useJoke({ serverJoke });
   return (
     <div className="flex flex-col items-center gap-4">
       <span>
-        <p>{joke.joke}</p>
+        {loading ? (
+          <LoaderIcon className="animate-spin" />
+        ) : error ? (
+          <span className="text-red-500">
+            <TriangleAlertIcon className="mr-1 inline-block" />
+            {error}
+          </span>
+        ) : (
+          joke.joke
+        )}
       </span>
       <span>
         <Button onClick={fetchNewJoke}>Fetch New Joke</Button>

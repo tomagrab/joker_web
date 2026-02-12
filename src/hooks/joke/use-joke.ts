@@ -8,6 +8,8 @@ type useJokeProps = {
 };
 
 export default function useJoke({ serverJoke }: useJokeProps) {
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const initialJokeRequest = use(serverJoke);
 
   const initialJoke: ApiResult<JokeType> = initialJokeRequest.success
@@ -24,17 +26,23 @@ export default function useJoke({ serverJoke }: useJokeProps) {
   );
 
   const fetchNewJoke = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const newJoke = await fetchRandomJoke();
       if (newJoke.success) {
         setJoke(newJoke.data);
       } else {
         console.error("Failed to fetch new joke:", newJoke.error.message);
+        setError(newJoke.error.message);
       }
     } catch (error) {
       console.error("An error occurred while fetching a new joke:", error);
+      setError("An unexpected error occurred");
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { joke, fetchNewJoke };
+  return { joke, fetchNewJoke, loading, error };
 }
