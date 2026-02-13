@@ -6,9 +6,13 @@ import {
   SidebarHeader,
 } from "@/components/ui/sidebar";
 
-export default function AppSidebar() {
+type AppSidebarProps = Readonly<{
+  variant?: "sidebar" | "floating" | "inset";
+}>;
+
+export default function AppSidebar({ variant = "inset" }: AppSidebarProps) {
   return (
-    <Sidebar variant={`inset`}>
+    <Sidebar variant={variant}>
       <SidebarHeader />
       <SidebarContent>
         <SidebarGroup />

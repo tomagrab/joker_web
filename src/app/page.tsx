@@ -5,9 +5,9 @@ export default async function Home() {
   const serverJoke = fetchRandomJoke();
 
   return (
-    <div className="flex flex-col items-center gap-4">
-      <header>
-        <h1 className="text-2xl font-bold">Jokes for Davey Wavey 🌊</h1>
+    <div className="flex h-full flex-col items-center justify-center gap-4">
+      <header className="">
+        <h2 className="text-2xl font-bold">Jokes for Davey Wavey 🌊</h2>
       </header>
       <JokeClientPage serverJoke={serverJoke} />
     </div>

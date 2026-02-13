@@ -27,7 +27,9 @@ export default function JokeClientPage({ serverJoke }: JokeClientPageProps) {
         )}
       </span>
       <span>
-        <Button onClick={fetchNewJoke}>Fetch New Joke</Button>
+        <Button disabled={loading} onClick={fetchNewJoke}>
+          Fetch New Joke
+        </Button>
       </span>
     </div>
   );

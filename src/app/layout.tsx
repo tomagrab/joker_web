@@ -1,8 +1,12 @@
+import AppFooter from "@/components/modules/app-footer/app-footer";
+import AppHeader from "@/components/modules/app-header/app-header";
 import AppSidebar from "@/components/modules/app-sidebar/app-sidebar";
+import { ThemeProvider } from "@/components/providers/theme/theme-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { cookies } from "next/headers";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,22 +24,55 @@ export const metadata: Metadata = {
   description: "An app for jokes",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = await cookies();
+  const sidebarVariant = (cookieStore.get("sidebar_variant")?.value ||
+    "inset") as "sidebar" | "floating" | "inset";
+  const sidebarOpen = cookieStore.get("sidebar_state")?.value !== "false";
+
   return (
-    <html lang="en">
+    <html lang="en" className="h-full overflow-hidden" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} h-full overflow-hidden antialiased`}
       >
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>
-            <TooltipProvider>{children}</TooltipProvider>
-          </SidebarInset>
-        </SidebarProvider>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <SidebarProvider
+            defaultOpen={sidebarOpen}
+            className="h-svh max-h-svh! min-h-svh!"
+          >
+            <AppSidebar variant={sidebarVariant} />
+            {sidebarVariant === "inset" ? (
+              <SidebarInset className="min-h-0 overflow-hidden">
+                <TooltipProvider>
+                  <AppHeader />
+                  <main className="min-h-0 flex-1 overflow-auto">
+                    {children}
+                  </main>
+                  <AppFooter />
+                </TooltipProvider>
+              </SidebarInset>
+            ) : (
+              <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                <TooltipProvider>
+                  <AppHeader />
+                  <main className="min-h-0 flex-1 overflow-auto">
+                    {children}
+                  </main>
+                  <AppFooter />
+                </TooltipProvider>
+              </div>
+            )}
+          </SidebarProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
