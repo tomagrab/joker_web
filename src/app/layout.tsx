@@ -1,6 +1,7 @@
 import AppFooter from "@/components/modules/app-footer/app-footer";
 import AppHeader from "@/components/modules/app-header/app-header";
 import AppSidebar from "@/components/modules/app-sidebar/app-sidebar";
+import AppChatWidgetDnDProvider from "@/components/providers/app-chat-widget-dnd/app-chat-widget-dnd-provider";
 import { ThemeProvider } from "@/components/providers/theme/theme-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -45,33 +46,35 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider
-            defaultOpen={sidebarOpen}
-            className="h-svh max-h-svh! min-h-svh!"
-          >
-            <AppSidebar variant={sidebarVariant} />
-            {sidebarVariant === "inset" ? (
-              <SidebarInset className="min-h-0 overflow-hidden">
-                <TooltipProvider>
-                  <AppHeader />
-                  <main className="min-h-0 flex-1 overflow-auto">
-                    {children}
-                  </main>
-                  <AppFooter />
-                </TooltipProvider>
-              </SidebarInset>
-            ) : (
-              <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-                <TooltipProvider>
-                  <AppHeader />
-                  <main className="min-h-0 flex-1 overflow-auto">
-                    {children}
-                  </main>
-                  <AppFooter />
-                </TooltipProvider>
-              </div>
-            )}
-          </SidebarProvider>
+          <AppChatWidgetDnDProvider>
+            <SidebarProvider
+              defaultOpen={sidebarOpen}
+              className="h-svh max-h-svh! min-h-svh!"
+            >
+              <AppSidebar variant={sidebarVariant} />
+              {sidebarVariant === "inset" ? (
+                <SidebarInset className="min-h-0 overflow-hidden">
+                  <TooltipProvider>
+                    <AppHeader />
+                    <main className="min-h-0 flex-1 overflow-auto">
+                      {children}
+                    </main>
+                    <AppFooter />
+                  </TooltipProvider>
+                </SidebarInset>
+              ) : (
+                <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                  <TooltipProvider>
+                    <AppHeader />
+                    <main className="min-h-0 flex-1 overflow-auto">
+                      {children}
+                    </main>
+                    <AppFooter />
+                  </TooltipProvider>
+                </div>
+              )}
+            </SidebarProvider>
+          </AppChatWidgetDnDProvider>
         </ThemeProvider>
       </body>
     </html>
