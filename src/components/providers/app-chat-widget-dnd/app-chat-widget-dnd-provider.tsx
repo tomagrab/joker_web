@@ -2,8 +2,8 @@
 
 import AppChatWidget from "@/components/modules/app-chat-widget/app-chat-widget";
 import type { UniqueIdentifier } from "@dnd-kit/abstract";
-import { closestCenter } from "@dnd-kit/collision";
-import { RestrictToElement } from "@dnd-kit/dom/modifiers";
+import { closestCorners } from "@dnd-kit/collision";
+import { RestrictToWindow } from "@dnd-kit/dom/modifiers";
 import { DragDropProvider, useDraggable, useDroppable } from "@dnd-kit/react";
 import { ReactNode, useState } from "react";
 
@@ -54,7 +54,7 @@ export default function AppChatWidgetDnDProvider({
 function DraggableChatWidget() {
   const { ref } = useDraggable({
     id: "chat-widget",
-    modifiers: [RestrictToElement.configure({ element: () => document.body })],
+    modifiers: [RestrictToWindow],
   });
 
   return <AppChatWidget ref={ref} />;
@@ -74,22 +74,40 @@ function DroppableCorner({ id, position, children }: DroppableCornerProps) {
     "bottom-right": "bottom-0 right-0",
   };
 
+  // Align items so the widget grows inward (toward viewport center)
+  const alignmentClasses = {
+    "top-left": "items-start justify-start",
+    "top-right": "items-end justify-start",
+    "bottom-left": "items-start justify-end",
+    "bottom-right": "items-end justify-end",
+  };
+
+  // Origin for the drop target indicator circle
+  const originClasses = {
+    "top-left": "top-0 left-0 translate-x-0 translate-y-0",
+    "top-right": "top-0 right-0 translate-x-0 translate-y-0",
+    "bottom-left": "bottom-0 left-0 translate-x-0 translate-y-0",
+    "bottom-right": "bottom-0 right-0 translate-x-0 translate-y-0",
+  };
+
   const { ref, isDropTarget } = useDroppable({
     id,
-    collisionDetector: closestCenter,
+    collisionDetector: closestCorners,
   });
 
   return (
     <div
       ref={ref}
-      className={`absolute ${positionClasses[position]} z-100 flex h-20 w-20 flex-col items-center justify-center`}
+      className={`fixed ${positionClasses[position]} z-100 flex max-h-screen max-w-full flex-col p-2 ${alignmentClasses[position]}`}
     >
       <div
-        className={`absolute top-[50%] left-[50%] z-0 h-14 w-14 -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-gray-600 transition-opacity duration-300 ${
+        className={`pointer-events-none absolute ${originClasses[position]} z-0 m-1 h-14 w-14 rounded-full bg-gray-600 transition-opacity duration-300 ${
           isDropTarget ? "opacity-60" : "opacity-0"
         }`}
       />
-      <div className="z-10">{children}</div>
+      <div className="z-10 max-h-[calc(100vh-1rem)] max-w-[calc(100vw-1rem)] overflow-auto">
+        {children}
+      </div>
     </div>
   );
 }
