@@ -18,7 +18,7 @@ export default function AppChatWidgetDnDProvider({
     "bottom-right-corner",
   );
   return (
-    <div className="border border-purple-500">
+    <div className="">
       <DragDropProvider
         onDragStart={(event) => {
           console.log("Drag started:", event);
