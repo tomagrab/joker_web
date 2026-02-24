@@ -1,99 +1,66 @@
 "use client";
 
-import { BotIcon } from "lucide-react";
+import { useChatWidgetState } from "@/hooks/app-chat-widget/use-chat-widget-state";
+import {
+  getAnimateProps,
+  getContainerClassName,
+} from "@/lib/helpers/app-chat-widget/app-chat-widget-helpers";
 import { AnimatePresence, motion } from "motion/react";
-import { useState } from "react";
+
+import { ChatWidgetClosed } from "./app-chat-widget-closed";
+import { ChatWidgetPanel } from "./app-chat-widget-panel";
 
 type AppChatWidgetProps = {
-  ref: (element: Element | null) => void;
+  ref?: (element: Element | null) => void;
+  handleRef?: (element: Element | null) => void;
 };
 
-export default function AppChatWidget({ ref }: AppChatWidgetProps) {
-  type ChatWidgetStateType = "closed" | "open" | "fullscreen";
-  const [chatWidgetState, setChatWidgetState] =
-    useState<ChatWidgetStateType>("closed");
+const CONTAINER_TRANSITION = {
+  type: "spring" as const,
+  stiffness: 400,
+  damping: 30,
+};
 
-  const isClosed = chatWidgetState === "closed";
-  const isOpen = chatWidgetState === "open";
-
-  const closedSize = 56;
-  const openWidth = 300;
-  const openHeight = 500;
+export default function AppChatWidget({ ref, handleRef }: AppChatWidgetProps) {
+  const {
+    state,
+    containerRef,
+    originRect,
+    isFullscreen,
+    isClosed,
+    needsFixed,
+    isExitingFullscreen,
+    handleStateChange,
+    handleAnimationComplete,
+  } = useChatWidgetState();
 
   return (
     <motion.div
-      ref={ref}
-      className={`flex flex-col overflow-hidden ${
-        isClosed
-          ? "cursor-pointer items-center justify-center"
-          : isOpen
-            ? ""
-            : "fixed inset-0 z-50 h-full w-full p-2"
-      }`}
+      ref={(el) => {
+        if (ref) ref(el);
+        if (el) containerRef.current = el as HTMLDivElement;
+      }}
+      className={getContainerClassName(state, needsFixed)}
+      style={
+        isFullscreen && originRect
+          ? { top: originRect.top, left: originRect.left }
+          : undefined
+      }
       initial={false}
-      animate={{
-        width: isClosed ? closedSize : isOpen ? openWidth : "100%",
-        height: isClosed ? closedSize : isOpen ? openHeight : "100%",
-        borderRadius: isClosed ? closedSize / 2 : isOpen ? 8 : 0,
-        backgroundColor: isClosed
-          ? "var(--color-blue-500)"
-          : "var(--color-white)",
-      }}
-      transition={{
-        type: "spring",
-        stiffness: 400,
-        damping: 30,
-      }}
-      onClick={() => {
-        if (chatWidgetState === "closed") {
-          setChatWidgetState("open");
-        }
-      }}
+      animate={getAnimateProps(state, isExitingFullscreen, originRect)}
+      transition={CONTAINER_TRANSITION}
+      onAnimationComplete={handleAnimationComplete}
+      onClick={() => isClosed && handleStateChange("open")}
     >
       <AnimatePresence mode="popLayout">
         {isClosed ? (
-          <motion.div
-            key="closed"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            transition={{ duration: 0.15 }}
-          >
-            <BotIcon className="h-10 w-10" />
-          </motion.div>
-        ) : isOpen ? (
-          <motion.div
-            key="open"
-            className="flex h-full flex-col"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
-          >
-            <div className="flex items-center justify-between bg-white p-2">
-              <span>Header</span>
-              <button
-                className="rounded p-1 text-sm hover:bg-gray-200"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setChatWidgetState("closed");
-                }}
-              >
-                ✕
-              </button>
-            </div>
-            <div className="flex-1 bg-gray-500">Body</div>
-            <div className="bg-white p-2">Footer</div>
-          </motion.div>
+          <ChatWidgetClosed />
         ) : (
-          <motion.div
-            key="fullscreen"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            Fullscreen
-          </motion.div>
+          <ChatWidgetPanel
+            isFullscreen={isFullscreen}
+            onStateChange={handleStateChange}
+            handleRef={handleRef}
+          />
         )}
       </AnimatePresence>
     </motion.div>

@@ -1,11 +1,14 @@
 "use client";
 
 import AppChatWidget from "@/components/modules/app-chat-widget/app-chat-widget";
+import { ChatWidgetState } from "@/lib/types/chat-widget/chat-widget-types";
 import type { UniqueIdentifier } from "@dnd-kit/abstract";
 import { closestCorners } from "@dnd-kit/collision";
 import { RestrictToWindow } from "@dnd-kit/dom/modifiers";
 import { DragDropProvider, useDraggable, useDroppable } from "@dnd-kit/react";
-import { ReactNode, useState } from "react";
+import { ReactNode, useContext, useState } from "react";
+import AppChatWidgetContext from "../../contexts/app-chat-widget/app-chat-widget-context";
+import { AppChatWidgetProvider } from "../app-chat-widget-context-provider/app-chat-widget-context-provider";
 
 type ChatDnDProviderProps = {
   children: ReactNode;
@@ -17,47 +20,52 @@ export default function AppChatWidgetDnDProvider({
   const [dropTarget, setDefaultDropTarget] = useState<UniqueIdentifier | null>(
     "bottom-right-corner",
   );
+  const [state, setState] = useState<ChatWidgetState>("open");
   return (
     <div className="">
-      <DragDropProvider
-        onDragStart={(event) => {
-          console.log("Drag started:", event);
-        }}
-        onDragEnd={(event) => {
-          if (event.canceled) return;
+      <AppChatWidgetProvider value={{ state, setState }}>
+        <DragDropProvider
+          onDragStart={(event) => {
+            console.log("Drag started:", event);
+          }}
+          onDragEnd={(event) => {
+            if (event.canceled) return;
 
-          const { target } = event.operation;
-          setDefaultDropTarget(target?.id || null);
-        }}
-      >
-        {children}
+            const { target } = event.operation;
+            setDefaultDropTarget(target?.id || null);
+          }}
+        >
+          {children}
 
-        {!dropTarget && <DraggableChatWidget />}
+          {!dropTarget && <DraggableChatWidget />}
 
-        <DroppableCorner id={`top-left-corner`} position="top-left">
-          {dropTarget === "top-left-corner" && <DraggableChatWidget />}
-        </DroppableCorner>
-        <DroppableCorner id={`bottom-left-corner`} position="bottom-left">
-          {dropTarget === "bottom-left-corner" && <DraggableChatWidget />}
-        </DroppableCorner>
-        <DroppableCorner id={`top-right-corner`} position="top-right">
-          {dropTarget === "top-right-corner" && <DraggableChatWidget />}
-        </DroppableCorner>
-        <DroppableCorner id={`bottom-right-corner`} position="bottom-right">
-          {dropTarget === "bottom-right-corner" && <DraggableChatWidget />}
-        </DroppableCorner>
-      </DragDropProvider>
+          <DroppableCorner id={`top-left-corner`} position="top-left">
+            {dropTarget === "top-left-corner" && <DraggableChatWidget />}
+          </DroppableCorner>
+          <DroppableCorner id={`bottom-left-corner`} position="bottom-left">
+            {dropTarget === "bottom-left-corner" && <DraggableChatWidget />}
+          </DroppableCorner>
+          <DroppableCorner id={`top-right-corner`} position="top-right">
+            {dropTarget === "top-right-corner" && <DraggableChatWidget />}
+          </DroppableCorner>
+          <DroppableCorner id={`bottom-right-corner`} position="bottom-right">
+            {dropTarget === "bottom-right-corner" && <DraggableChatWidget />}
+          </DroppableCorner>
+        </DragDropProvider>
+      </AppChatWidgetProvider>
     </div>
   );
 }
 
 function DraggableChatWidget() {
-  const { ref } = useDraggable({
+  const { state } = useContext(AppChatWidgetContext);
+  const { ref, handleRef } = useDraggable({
     id: "chat-widget",
     modifiers: [RestrictToWindow],
+    disabled: state === "fullscreen",
   });
 
-  return <AppChatWidget ref={ref} />;
+  return <AppChatWidget ref={ref} handleRef={handleRef} />;
 }
 
 type DroppableCornerProps = {
