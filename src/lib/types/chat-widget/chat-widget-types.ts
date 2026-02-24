@@ -1,1 +1,6 @@
-export type ChatWidgetState = "closed" | "open" | "fullscreen";
+export type ChatWidgetState =
+  | "closed"
+  | "open"
+  | "fullscreen"
+  | null
+  | undefined;

@@ -22,9 +22,6 @@ export function ChatWidgetPanel({
     <motion.div
       key={isFullscreen ? "fullscreen" : "open"}
       className="flex h-full flex-col"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
       transition={{ duration: 0.15 }}
     >
       <AppChatWidgetHeader

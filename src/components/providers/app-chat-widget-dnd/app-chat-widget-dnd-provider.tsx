@@ -1,58 +1,60 @@
 "use client";
 
 import AppChatWidget from "@/components/modules/app-chat-widget/app-chat-widget";
-import { ChatWidgetState } from "@/lib/types/chat-widget/chat-widget-types";
 import type { UniqueIdentifier } from "@dnd-kit/abstract";
 import { closestCorners } from "@dnd-kit/collision";
 import { RestrictToWindow } from "@dnd-kit/dom/modifiers";
 import { DragDropProvider, useDraggable, useDroppable } from "@dnd-kit/react";
 import { ReactNode, useContext, useState } from "react";
 import AppChatWidgetContext from "../../contexts/app-chat-widget/app-chat-widget-context";
-import { AppChatWidgetProvider } from "../app-chat-widget-context-provider/app-chat-widget-context-provider";
 
 type ChatDnDProviderProps = {
   children: ReactNode;
+  initialPosition?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
 };
 
 export default function AppChatWidgetDnDProvider({
   children,
+  initialPosition = "bottom-right",
 }: ChatDnDProviderProps) {
   const [dropTarget, setDefaultDropTarget] = useState<UniqueIdentifier | null>(
-    "bottom-right-corner",
+    `${initialPosition}-corner`,
   );
-  const [state, setState] = useState<ChatWidgetState>("open");
   return (
     <div className="">
-      <AppChatWidgetProvider value={{ state, setState }}>
-        <DragDropProvider
-          onDragStart={(event) => {
-            console.log("Drag started:", event);
-          }}
-          onDragEnd={(event) => {
-            if (event.canceled) return;
+      <DragDropProvider
+        onDragStart={(event) => {
+          console.log("Drag started:", event);
+        }}
+        onDragEnd={(event) => {
+          if (event.canceled) return;
 
-            const { target } = event.operation;
-            setDefaultDropTarget(target?.id || null);
-          }}
-        >
-          {children}
+          const { target } = event.operation;
+          // Set the position cookie based on the drop target's ID
+          if (target) {
+            const position = String(target.id).replace("-corner", "");
+            document.cookie = `chat_widget_position=${position}; path=/; max-age=${60 * 60 * 24 * 30}`;
+          }
+          setDefaultDropTarget(target?.id || null);
+        }}
+      >
+        {children}
 
-          {!dropTarget && <DraggableChatWidget />}
+        {!dropTarget && <DraggableChatWidget />}
 
-          <DroppableCorner id={`top-left-corner`} position="top-left">
-            {dropTarget === "top-left-corner" && <DraggableChatWidget />}
-          </DroppableCorner>
-          <DroppableCorner id={`bottom-left-corner`} position="bottom-left">
-            {dropTarget === "bottom-left-corner" && <DraggableChatWidget />}
-          </DroppableCorner>
-          <DroppableCorner id={`top-right-corner`} position="top-right">
-            {dropTarget === "top-right-corner" && <DraggableChatWidget />}
-          </DroppableCorner>
-          <DroppableCorner id={`bottom-right-corner`} position="bottom-right">
-            {dropTarget === "bottom-right-corner" && <DraggableChatWidget />}
-          </DroppableCorner>
-        </DragDropProvider>
-      </AppChatWidgetProvider>
+        <DroppableCorner id={`top-left-corner`} position="top-left">
+          {dropTarget === "top-left-corner" && <DraggableChatWidget />}
+        </DroppableCorner>
+        <DroppableCorner id={`bottom-left-corner`} position="bottom-left">
+          {dropTarget === "bottom-left-corner" && <DraggableChatWidget />}
+        </DroppableCorner>
+        <DroppableCorner id={`top-right-corner`} position="top-right">
+          {dropTarget === "top-right-corner" && <DraggableChatWidget />}
+        </DroppableCorner>
+        <DroppableCorner id={`bottom-right-corner`} position="bottom-right">
+          {dropTarget === "bottom-right-corner" && <DraggableChatWidget />}
+        </DroppableCorner>
+      </DragDropProvider>
     </div>
   );
 }

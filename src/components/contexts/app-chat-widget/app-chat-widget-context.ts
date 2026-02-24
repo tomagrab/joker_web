@@ -3,12 +3,12 @@ import { createContext, Dispatch, SetStateAction } from "react";
 
 type AppChatWidgetContextType = {
   state: ChatWidgetState;
-  setState: Dispatch<SetStateAction<ChatWidgetState>>;
+  setAndPersistState: Dispatch<SetStateAction<ChatWidgetState>>;
 };
 
 const AppChatWidgetContext = createContext<AppChatWidgetContextType>({
-  state: "open",
-  setState: () => {},
+  state: null,
+  setAndPersistState: () => {},
 });
 
 export default AppChatWidgetContext;

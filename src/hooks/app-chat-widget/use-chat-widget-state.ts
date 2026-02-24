@@ -13,7 +13,7 @@ import { useCallback, useContext, useRef, useState } from "react";
  *   the spring settles.
  */
 export function useChatWidgetState() {
-  const { state, setState } = useContext(AppChatWidgetContext);
+  const { state, setAndPersistState } = useContext(AppChatWidgetContext);
   const containerRef = useRef<HTMLDivElement>(null);
   const [originRect, setOriginRect] = useState<DOMRect | null>(null);
   const [isExitingFullscreen, setIsExitingFullscreen] = useState(false);
@@ -30,9 +30,9 @@ export function useChatWidgetState() {
       if (state === "fullscreen" && newState !== "fullscreen") {
         setIsExitingFullscreen(true);
       }
-      setState(newState);
+      setAndPersistState(newState);
     },
-    [state, setState],
+    [state, setAndPersistState],
   );
 
   const handleAnimationComplete = useCallback(() => {
