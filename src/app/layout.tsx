@@ -1,6 +1,8 @@
 import AppFooter from "@/components/modules/app-footer/app-footer";
 import AppHeader from "@/components/modules/app-header/app-header";
 import AppSidebar from "@/components/modules/app-sidebar/app-sidebar";
+import { AppChatWidgetProvider } from "@/components/providers/app-chat-widget-context-provider/app-chat-widget-context-provider";
+import AppChatWidgetDnDProvider from "@/components/providers/app-chat-widget-dnd/app-chat-widget-dnd-provider";
 import { ThemeProvider } from "@/components/providers/theme/theme-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -33,6 +35,14 @@ export default async function RootLayout({
   const sidebarVariant = (cookieStore.get("sidebar_variant")?.value ||
     "inset") as "sidebar" | "floating" | "inset";
   const sidebarOpen = cookieStore.get("sidebar_state")?.value !== "false";
+  const chatWidgetState = (cookieStore.get("chat_widget_state")?.value ||
+    "open") as "open" | "closed" | "fullscreen";
+  const chatWidgetPosition =
+    (cookieStore.get("chat_widget_position")?.value as
+      | "top-left"
+      | "top-right"
+      | "bottom-left"
+      | "bottom-right") || "bottom-right";
 
   return (
     <html lang="en" className="h-full overflow-hidden" suppressHydrationWarning>
@@ -45,33 +55,37 @@ export default async function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider
-            defaultOpen={sidebarOpen}
-            className="h-svh max-h-svh! min-h-svh!"
-          >
-            <AppSidebar variant={sidebarVariant} />
-            {sidebarVariant === "inset" ? (
-              <SidebarInset className="min-h-0 overflow-hidden">
-                <TooltipProvider>
-                  <AppHeader />
-                  <main className="min-h-0 flex-1 overflow-auto">
-                    {children}
-                  </main>
-                  <AppFooter />
-                </TooltipProvider>
-              </SidebarInset>
-            ) : (
-              <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
-                <TooltipProvider>
-                  <AppHeader />
-                  <main className="min-h-0 flex-1 overflow-auto">
-                    {children}
-                  </main>
-                  <AppFooter />
-                </TooltipProvider>
-              </div>
-            )}
-          </SidebarProvider>
+          <AppChatWidgetProvider initialState={chatWidgetState}>
+            <AppChatWidgetDnDProvider initialPosition={chatWidgetPosition}>
+              <SidebarProvider
+                defaultOpen={sidebarOpen}
+                className="h-svh max-h-svh! min-h-svh!"
+              >
+                <AppSidebar variant={sidebarVariant} />
+                {sidebarVariant === "inset" ? (
+                  <SidebarInset className="min-h-0 overflow-hidden">
+                    <TooltipProvider>
+                      <AppHeader />
+                      <main className="min-h-0 flex-1 overflow-auto">
+                        {children}
+                      </main>
+                      <AppFooter />
+                    </TooltipProvider>
+                  </SidebarInset>
+                ) : (
+                  <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
+                    <TooltipProvider>
+                      <AppHeader />
+                      <main className="min-h-0 flex-1 overflow-auto">
+                        {children}
+                      </main>
+                      <AppFooter />
+                    </TooltipProvider>
+                  </div>
+                )}
+              </SidebarProvider>
+            </AppChatWidgetDnDProvider>
+          </AppChatWidgetProvider>
         </ThemeProvider>
       </body>
     </html>

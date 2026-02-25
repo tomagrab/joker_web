@@ -20,6 +20,22 @@ export function proxy(request: NextRequest) {
     });
   }
 
+  // Check if the chat_widget_state cookie exists
+  if (!request.cookies.has("chat_widget_state")) {
+    // Set the default cookie
+    response.cookies.set("chat_widget_state", "open", {
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
+  }
+
+  // Check if the chat_widget_position cookie exists
+  if (!request.cookies.has("chat_widget_position")) {
+    // Set the default cookie
+    response.cookies.set("chat_widget_position", "bottom-right", {
+      maxAge: 60 * 60 * 24 * 30, // 30 days
+    });
+  }
+
   return response;
 }
 
