@@ -28,9 +28,11 @@ import {
   SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar";
+import type { UserPreferenceSidebarItemId } from "@/lib/types/preferences/user-preferences-types";
 
 const primaryNavigation = [
   {
+    id: "home",
     href: "/",
     label: "Home",
     description: "Random jokes and landing page",
@@ -38,26 +40,41 @@ const primaryNavigation = [
     exact: true,
   },
   {
+    id: "tools",
     href: "/tools",
     label: "Tools",
     description: "Utilities and app tooling",
     icon: Wrench,
     exact: false,
   },
-] as const;
+] as const satisfies ReadonlyArray<{
+  id: UserPreferenceSidebarItemId;
+  href: string;
+  label: string;
+  description: string;
+  icon: React.ComponentType<{ className?: string }>;
+  exact: boolean;
+}>;
 
 const settingsNavigation = [
   {
+    id: "settings.app",
     href: "/tools/settings",
     label: "App settings",
     exact: true,
   },
   {
+    id: "settings.user",
     href: "/tools/settings/user",
     label: "User settings",
     exact: true,
   },
-] as const;
+] as const satisfies ReadonlyArray<{
+  id: UserPreferenceSidebarItemId;
+  href: string;
+  label: string;
+  exact: boolean;
+}>;
 
 function isRouteActive(pathname: string, href: string, exact = false) {
   if (href === "/") {

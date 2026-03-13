@@ -1,22 +1,18 @@
 "use client";
 
 import AppChatWidgetContext from "@/components/contexts/app-chat-widget/app-chat-widget-context";
+import AppPreferencesContext from "@/components/contexts/app-preferences/app-preferences-context";
 import AppChatWidget from "@/components/modules/app-chat-widget/app-chat-widget";
 import type { UniqueIdentifier } from "@dnd-kit/abstract";
 import { closestCorners } from "@dnd-kit/collision";
 import { RestrictToWindow } from "@dnd-kit/dom/modifiers";
 import { DragDropProvider, useDraggable, useDroppable } from "@dnd-kit/react";
-import { ReactNode, useContext, useState } from "react";
+import { ReactNode, useContext } from "react";
 
-type ChatWidgetPosition =
-  | "top-left"
-  | "top-right"
-  | "bottom-left"
-  | "bottom-right";
+import type { ChatWidgetPosition } from "@/lib/types/chat-widget/chat-widget-types";
 
 type ChatDnDProviderProps = {
   children: ReactNode;
-  initialPosition?: ChatWidgetPosition;
 };
 
 const CORNER_ID_BY_POSITION: Record<ChatWidgetPosition, UniqueIdentifier> = {
@@ -53,9 +49,11 @@ const ORIGIN_CLASSES: Record<ChatWidgetPosition, string> = {
 
 export default function AppChatWidgetDnDProvider({
   children,
-  initialPosition = "bottom-right",
 }: ChatDnDProviderProps) {
-  const [position, setPosition] = useState<ChatWidgetPosition>(initialPosition);
+  const { preferences, setChatWidgetPosition } = useContext(
+    AppPreferencesContext,
+  );
+  const position = preferences.chatWidget.position;
 
   return (
     <div>
@@ -77,8 +75,7 @@ export default function AppChatWidgetDnDProvider({
             return;
           }
 
-          document.cookie = `chat_widget_position=${nextPosition}; path=/; max-age=${60 * 60 * 24 * 30}`;
-          setPosition(nextPosition);
+          setChatWidgetPosition(nextPosition);
         }}
       >
         {children}

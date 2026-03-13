@@ -1,5 +1,6 @@
 "use client";
 
+import AppPreferencesContext from "@/components/contexts/app-preferences/app-preferences-context";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
@@ -66,6 +67,7 @@ function SidebarProvider({
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }) {
+  const { setSidebarOpen } = React.useContext(AppPreferencesContext);
   const isMobile = useIsMobile();
   const [openMobile, setOpenMobile] = React.useState(false);
 
@@ -84,8 +86,9 @@ function SidebarProvider({
 
       // This sets the cookie to keep the sidebar state.
       document.cookie = `${SIDEBAR_COOKIE_NAME}=${openState}; path=/; max-age=${SIDEBAR_COOKIE_MAX_AGE}`;
+      setSidebarOpen(openState);
     },
-    [setOpenProp, open],
+    [setOpenProp, open, setSidebarOpen],
   );
 
   // Helper to toggle the sidebar.
