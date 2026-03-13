@@ -21,7 +21,7 @@ type ChatWidgetPanelProps = {
   messages: AppChatWidgetMessage[];
   isLoading: boolean;
   isConfigured: boolean;
-  isDragging: boolean;
+  isConfigurationLoading: boolean;
 };
 
 const ChatWidgetPanel = memo(function ChatWidgetPanel({
@@ -35,7 +35,7 @@ const ChatWidgetPanel = memo(function ChatWidgetPanel({
   messages,
   isLoading,
   isConfigured,
-  isDragging,
+  isConfigurationLoading,
 }: ChatWidgetPanelProps) {
   return (
     <motion.div
@@ -52,7 +52,7 @@ const ChatWidgetPanel = memo(function ChatWidgetPanel({
           messages={messages}
           isLoading={isLoading}
           isConfigured={isConfigured}
-          isDragging={isDragging}
+          isConfigurationLoading={isConfigurationLoading}
         />
       </div>
       <AppChatWidgetFooter
@@ -60,9 +60,10 @@ const ChatWidgetPanel = memo(function ChatWidgetPanel({
         value={inputValue}
         onValueChange={onInputValueChange}
         onSubmit={onSubmit}
-        isDisabled={isLoading || !isConfigured}
+        isDisabled={isLoading || isConfigurationLoading || !isConfigured}
         isLoading={isLoading}
         isConfigured={isConfigured}
+        isConfigurationLoading={isConfigurationLoading}
       />
     </motion.div>
   );

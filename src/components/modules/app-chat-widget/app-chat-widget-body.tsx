@@ -7,14 +7,14 @@ type AppChatWidgetBodyProps = {
   messages: AppChatWidgetMessage[];
   isLoading: boolean;
   isConfigured: boolean;
-  isDragging: boolean;
+  isConfigurationLoading: boolean;
 };
 
 const AppChatWidgetBody = memo(function AppChatWidgetBody({
   messages,
   isLoading,
   isConfigured,
-  isDragging,
+  isConfigurationLoading,
 }: AppChatWidgetBodyProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -39,14 +39,20 @@ const AppChatWidgetBody = memo(function AppChatWidgetBody({
       {messages.length === 0 ? (
         <div className="text-muted-foreground flex h-full flex-col items-center justify-center gap-3 text-center">
           <p className="max-w-56 text-sm font-medium text-balance">
-            {isConfigured
-              ? "Ask Stonly a question and the answer will appear here."
-              : "Set NEXT_PUBLIC_STONLY_AI_AGENT_ID to enable the Stonly chat widget."}
+            {isConfigurationLoading
+              ? "Preparing chat..."
+              : isConfigured
+                ? "Ask a question and the answer will appear here."
+                : "Chat is currently unavailable."}
           </p>
-          {isLoading ? (
+          {isLoading || isConfigurationLoading ? (
             <div className="flex items-center gap-2 text-xs">
               <Spinner className="size-4" />
-              <span>Waiting for Stonly to respond...</span>
+              <span>
+                {isConfigurationLoading
+                  ? "Checking chat availability..."
+                  : "Waiting for a response..."}
+              </span>
             </div>
           ) : null}
         </div>
@@ -72,7 +78,6 @@ const AppChatWidgetBody = memo(function AppChatWidgetBody({
                   {message.status === "pending" ? (
                     <AppChatWidgetPendingMessage
                       initialMessage={message.content}
-                      isPaused={isDragging}
                     />
                   ) : message.format === "html" ? (
                     <div

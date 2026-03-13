@@ -9,11 +9,11 @@ import {
   getContainerClassName,
 } from "@/lib/helpers/app-chat-widget/app-chat-widget-helpers";
 import { AnimatePresence, motion } from "motion/react";
+import { memo, useCallback } from "react";
 
 type AppChatWidgetProps = {
-  ref?: (element: Element | null) => void;
+  dragRef?: (element: Element | null) => void;
   handleRef?: (element: Element | null) => void;
-  isDragging?: boolean;
 };
 
 const CONTAINER_TRANSITION = {
@@ -22,10 +22,9 @@ const CONTAINER_TRANSITION = {
   damping: 30,
 };
 
-export default function AppChatWidget({
-  ref,
+const AppChatWidget = memo(function AppChatWidget({
+  dragRef,
   handleRef,
-  isDragging = false,
 }: AppChatWidgetProps) {
   const {
     state,
@@ -45,15 +44,24 @@ export default function AppChatWidget({
     messages,
     isSubmitting,
     isConfigured,
+    isConfigLoading,
     handleSubmit,
   } = useChatWidgetConversation();
 
+  const setContainerRef = useCallback(
+    (element: HTMLDivElement | null) => {
+      if (dragRef) {
+        dragRef(element);
+      }
+
+      containerRef.current = element;
+    },
+    [dragRef, containerRef],
+  );
+
   return (
     <motion.div
-      ref={(el) => {
-        if (ref) ref(el);
-        if (el) containerRef.current = el as HTMLDivElement;
-      }}
+      ref={setContainerRef}
       className={getContainerClassName(state, needsFixed)}
       style={
         isFullscreen && originRect
@@ -81,10 +89,12 @@ export default function AppChatWidget({
             messages={messages}
             isLoading={isSubmitting}
             isConfigured={isConfigured}
-            isDragging={isDragging}
+            isConfigurationLoading={isConfigLoading}
           />
         )}
       </AnimatePresence>
     </motion.div>
   );
-}
+});
+
+export default AppChatWidget;

@@ -1,10 +1,11 @@
 "use client";
 
+import { AppChatWidgetPendingMessage } from "@/components/modules/app-chat-widget/app-chat-widget-pending-message";
 import { Button } from "@/components/ui/button";
 import useJoke from "@/hooks/joke/use-joke";
 import { ApiResponse } from "@/lib/types/api/common/api-common-types";
 import { JokeType } from "@/lib/types/api/joke/joke-types";
-import { LoaderIcon, TriangleAlertIcon } from "lucide-react";
+import { RefreshCcwIcon, TriangleAlertIcon } from "lucide-react";
 
 type JokeClientPageProps = {
   serverJoke: Promise<ApiResponse<JokeType>>;
@@ -16,7 +17,7 @@ export default function JokeClientPage({ serverJoke }: JokeClientPageProps) {
     <div className="flex flex-col items-center gap-4">
       <span>
         {loading ? (
-          <LoaderIcon className="animate-spin" />
+          <AppChatWidgetPendingMessage initialMessage="Fetching a hilarious joke for you..." />
         ) : error ? (
           <span className="text-red-500">
             <TriangleAlertIcon className="mr-1 inline-block" />
@@ -28,7 +29,7 @@ export default function JokeClientPage({ serverJoke }: JokeClientPageProps) {
       </span>
       <span>
         <Button disabled={loading} onClick={fetchNewJoke}>
-          Fetch New Joke
+          <RefreshCcwIcon className="inline-block" />
         </Button>
       </span>
     </div>

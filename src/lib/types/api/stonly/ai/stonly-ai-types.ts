@@ -47,6 +47,15 @@ export type StonlyAiSearchRequest = {
   webhookUrl?: string | null;
 };
 
+export type StonlyAiWidgetSearchRequest = {
+  query: string;
+  conversationId?: string | null;
+};
+
+export type StonlyAiWidgetConfigResponse = {
+  isConfigured: boolean;
+};
+
 export type StonlyAiSearchResponse = {
   questionAnswerId: string;
 };

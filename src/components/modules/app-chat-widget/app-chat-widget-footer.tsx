@@ -12,6 +12,7 @@ type AppChatWidgetFooterProps = {
   isDisabled: boolean;
   isLoading: boolean;
   isConfigured: boolean;
+  isConfigurationLoading: boolean;
 };
 
 export default function AppChatWidgetFooter({
@@ -22,6 +23,7 @@ export default function AppChatWidgetFooter({
   isDisabled,
   isLoading,
   isConfigured,
+  isConfigurationLoading,
 }: AppChatWidgetFooterProps) {
   const isSubmitDisabled = isDisabled || !value.trim();
 
@@ -48,9 +50,11 @@ export default function AppChatWidgetFooter({
           onChange={(event) => onValueChange(event.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={
-            isConfigured
-              ? "Type your message..."
-              : "Configure Stonly to enable chat..."
+            isConfigurationLoading
+              ? "Preparing chat..."
+              : isConfigured
+                ? "Type your message..."
+                : "Chat is currently unavailable."
           }
           className="text-foreground! ring-none! focus:ring-none! bg-background! h-20! max-h-30! min-h-20! flex-1 resize-none overflow-auto border-none! pr-12 outline-none! focus:ring-0! focus:outline-none! focus-visible:ring-0! disabled:cursor-not-allowed disabled:opacity-70"
         />

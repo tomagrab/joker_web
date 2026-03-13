@@ -112,8 +112,9 @@ type DraggableChatWidgetProps = {
 
 function DraggableChatWidget({ position }: DraggableChatWidgetProps) {
   const { state } = useContext(AppChatWidgetContext);
-  const { ref, handleRef, isDragging } = useDraggable({
+  const { ref, handleRef } = useDraggable({
     id: "chat-widget",
+    feedback: "move",
     modifiers: [RestrictToWindow],
     disabled: state === "fullscreen",
   });
@@ -123,11 +124,7 @@ function DraggableChatWidget({ position }: DraggableChatWidgetProps) {
       className={`fixed ${POSITION_CLASSES[position]} z-100 flex max-h-screen max-w-full flex-col p-2 ${ALIGNMENT_CLASSES[position]}`}
     >
       <div className="z-10 max-h-[calc(100vh-1rem)] max-w-[calc(100vw-1rem)] overflow-auto">
-        <AppChatWidget
-          ref={ref}
-          handleRef={handleRef}
-          isDragging={isDragging}
-        />
+        <AppChatWidget dragRef={ref} handleRef={handleRef} />
       </div>
     </div>
   );
@@ -147,7 +144,7 @@ function DroppableCorner({ id, position }: DroppableCornerProps) {
   return (
     <div
       ref={ref}
-      className={`fixed ${POSITION_CLASSES[position]} z-90 h-40 w-40 p-2`}
+      className={`pointer-events-none fixed ${POSITION_CLASSES[position]} z-[110] h-40 w-40 p-2`}
     >
       <div
         className={`pointer-events-none absolute ${ORIGIN_CLASSES[position]} z-0 m-1 h-14 w-14 rounded-full bg-gray-600 transition-opacity duration-300 ${

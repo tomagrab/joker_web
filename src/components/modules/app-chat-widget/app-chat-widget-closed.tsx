@@ -10,7 +10,7 @@ export function ChatWidgetClosed() {
       exit={{ opacity: 0, scale: 0.8 }}
       transition={{ duration: 0.15 }}
     >
-      <BotIcon className="h-10 w-10" />
+      <BotIcon className="h-10 w-10 text-black" />
     </motion.div>
   );
 }
