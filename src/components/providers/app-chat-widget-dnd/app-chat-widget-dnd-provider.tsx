@@ -144,7 +144,7 @@ function DroppableCorner({ id, position }: DroppableCornerProps) {
   return (
     <div
       ref={ref}
-      className={`pointer-events-none fixed ${POSITION_CLASSES[position]} z-[110] h-40 w-40 p-2`}
+      className={`pointer-events-none fixed ${POSITION_CLASSES[position]} z-110 h-40 w-40 p-2`}
     >
       <div
         className={`pointer-events-none absolute ${ORIGIN_CLASSES[position]} z-0 m-1 h-14 w-14 rounded-full bg-gray-600 transition-opacity duration-300 ${
