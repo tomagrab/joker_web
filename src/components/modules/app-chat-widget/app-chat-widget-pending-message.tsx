@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 
 type AppChatWidgetPendingMessageProps = {
   initialMessage?: string;
+  isPaused?: boolean;
 };
 
 const TYPING_CHARACTER_INTERVAL_MS = 24;
@@ -15,6 +16,7 @@ const FULLY_TYPED_MESSAGE_HOLD_MS = 2200;
 
 export function AppChatWidgetPendingMessage({
   initialMessage,
+  isPaused = false,
 }: AppChatWidgetPendingMessageProps) {
   const initialIndex = useMemo(() => {
     if (!initialMessage) {
@@ -41,7 +43,7 @@ export function AppChatWidgetPendingMessage({
   }, [currentMessage]);
 
   useEffect(() => {
-    if (visibleCharacterCount >= currentMessage.length) {
+    if (isPaused || visibleCharacterCount >= currentMessage.length) {
       return;
     }
 
@@ -52,9 +54,13 @@ export function AppChatWidgetPendingMessage({
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [currentMessage, visibleCharacterCount]);
+  }, [currentMessage, isPaused, visibleCharacterCount]);
 
   useEffect(() => {
+    if (isPaused) {
+      return;
+    }
+
     const nextRotationDelay = Math.max(
       MIN_LOADING_MESSAGE_CYCLE_MS,
       currentMessage.length * TYPING_CHARACTER_INTERVAL_MS +
@@ -71,13 +77,17 @@ export function AppChatWidgetPendingMessage({
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [currentMessage]);
+  }, [currentMessage, isPaused]);
+
+  const displayedMessage = isPaused
+    ? currentMessage
+    : currentMessage.slice(0, visibleCharacterCount);
 
   return (
     <div className="flex items-center gap-2">
       <Spinner className="size-4 shrink-0" />
       <span className="app-chat-widget-shimmer text-sm font-medium">
-        {currentMessage.slice(0, visibleCharacterCount)}
+        {displayedMessage}
       </span>
     </div>
   );

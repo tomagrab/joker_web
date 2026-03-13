@@ -8,98 +8,137 @@ import { RestrictToWindow } from "@dnd-kit/dom/modifiers";
 import { DragDropProvider, useDraggable, useDroppable } from "@dnd-kit/react";
 import { ReactNode, useContext, useState } from "react";
 
+type ChatWidgetPosition =
+  | "top-left"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-right";
+
 type ChatDnDProviderProps = {
   children: ReactNode;
-  initialPosition?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
+  initialPosition?: ChatWidgetPosition;
+};
+
+const CORNER_ID_BY_POSITION: Record<ChatWidgetPosition, UniqueIdentifier> = {
+  "top-left": "top-left-corner",
+  "top-right": "top-right-corner",
+  "bottom-left": "bottom-left-corner",
+  "bottom-right": "bottom-right-corner",
+};
+
+const POSITION_BY_CORNER_ID = Object.fromEntries(
+  Object.entries(CORNER_ID_BY_POSITION).map(([position, id]) => [id, position]),
+) as Record<UniqueIdentifier, ChatWidgetPosition>;
+
+const POSITION_CLASSES: Record<ChatWidgetPosition, string> = {
+  "top-left": "top-0 left-0",
+  "top-right": "top-0 right-0",
+  "bottom-left": "bottom-0 left-0",
+  "bottom-right": "bottom-0 right-0",
+};
+
+const ALIGNMENT_CLASSES: Record<ChatWidgetPosition, string> = {
+  "top-left": "items-start justify-start",
+  "top-right": "items-end justify-start",
+  "bottom-left": "items-start justify-end",
+  "bottom-right": "items-end justify-end",
+};
+
+const ORIGIN_CLASSES: Record<ChatWidgetPosition, string> = {
+  "top-left": "top-0 left-0 translate-x-0 translate-y-0",
+  "top-right": "top-0 right-0 translate-x-0 translate-y-0",
+  "bottom-left": "bottom-0 left-0 translate-x-0 translate-y-0",
+  "bottom-right": "bottom-0 right-0 translate-x-0 translate-y-0",
 };
 
 export default function AppChatWidgetDnDProvider({
   children,
   initialPosition = "bottom-right",
 }: ChatDnDProviderProps) {
-  const [dropTarget, setDefaultDropTarget] = useState<UniqueIdentifier | null>(
-    `${initialPosition}-corner`,
-  );
-  return (
-    <div className="">
-      <DragDropProvider
-        onDragStart={(event) => {
-          console.log("Drag started:", event);
-        }}
-        onDragEnd={(event) => {
-          if (event.canceled) return;
+  const [position, setPosition] = useState<ChatWidgetPosition>(initialPosition);
 
-          const { target } = event.operation;
-          // Set the position cookie based on the drop target's ID
-          if (target) {
-            const position = String(target.id).replace("-corner", "");
-            document.cookie = `chat_widget_position=${position}; path=/; max-age=${60 * 60 * 24 * 30}`;
+  return (
+    <div>
+      <DragDropProvider
+        onDragEnd={(event) => {
+          if (event.canceled) {
+            return;
           }
-          setDefaultDropTarget(target?.id || null);
+
+          const targetId = event.operation.target?.id;
+
+          if (!targetId) {
+            return;
+          }
+
+          const nextPosition = POSITION_BY_CORNER_ID[targetId];
+
+          if (!nextPosition) {
+            return;
+          }
+
+          document.cookie = `chat_widget_position=${nextPosition}; path=/; max-age=${60 * 60 * 24 * 30}`;
+          setPosition(nextPosition);
         }}
       >
         {children}
 
-        {!dropTarget && <DraggableChatWidget />}
+        <DraggableChatWidget position={position} />
 
-        <DroppableCorner id={`top-left-corner`} position="top-left">
-          {dropTarget === "top-left-corner" && <DraggableChatWidget />}
-        </DroppableCorner>
-        <DroppableCorner id={`bottom-left-corner`} position="bottom-left">
-          {dropTarget === "bottom-left-corner" && <DraggableChatWidget />}
-        </DroppableCorner>
-        <DroppableCorner id={`top-right-corner`} position="top-right">
-          {dropTarget === "top-right-corner" && <DraggableChatWidget />}
-        </DroppableCorner>
-        <DroppableCorner id={`bottom-right-corner`} position="bottom-right">
-          {dropTarget === "bottom-right-corner" && <DraggableChatWidget />}
-        </DroppableCorner>
+        <DroppableCorner
+          id={CORNER_ID_BY_POSITION["top-left"]}
+          position="top-left"
+        />
+        <DroppableCorner
+          id={CORNER_ID_BY_POSITION["bottom-left"]}
+          position="bottom-left"
+        />
+        <DroppableCorner
+          id={CORNER_ID_BY_POSITION["top-right"]}
+          position="top-right"
+        />
+        <DroppableCorner
+          id={CORNER_ID_BY_POSITION["bottom-right"]}
+          position="bottom-right"
+        />
       </DragDropProvider>
     </div>
   );
 }
 
-function DraggableChatWidget() {
+type DraggableChatWidgetProps = {
+  position: ChatWidgetPosition;
+};
+
+function DraggableChatWidget({ position }: DraggableChatWidgetProps) {
   const { state } = useContext(AppChatWidgetContext);
-  const { ref, handleRef } = useDraggable({
+  const { ref, handleRef, isDragging } = useDraggable({
     id: "chat-widget",
     modifiers: [RestrictToWindow],
     disabled: state === "fullscreen",
   });
 
-  return <AppChatWidget ref={ref} handleRef={handleRef} />;
+  return (
+    <div
+      className={`fixed ${POSITION_CLASSES[position]} z-100 flex max-h-screen max-w-full flex-col p-2 ${ALIGNMENT_CLASSES[position]}`}
+    >
+      <div className="z-10 max-h-[calc(100vh-1rem)] max-w-[calc(100vw-1rem)] overflow-auto">
+        <AppChatWidget
+          ref={ref}
+          handleRef={handleRef}
+          isDragging={isDragging}
+        />
+      </div>
+    </div>
+  );
 }
 
 type DroppableCornerProps = {
   id: UniqueIdentifier;
-  position: "top-left" | "top-right" | "bottom-left" | "bottom-right";
-  children: ReactNode;
+  position: ChatWidgetPosition;
 };
 
-function DroppableCorner({ id, position, children }: DroppableCornerProps) {
-  const positionClasses = {
-    "top-left": "top-0 left-0",
-    "top-right": "top-0 right-0",
-    "bottom-left": "bottom-0 left-0",
-    "bottom-right": "bottom-0 right-0",
-  };
-
-  // Align items so the widget grows inward (toward viewport center)
-  const alignmentClasses = {
-    "top-left": "items-start justify-start",
-    "top-right": "items-end justify-start",
-    "bottom-left": "items-start justify-end",
-    "bottom-right": "items-end justify-end",
-  };
-
-  // Origin for the drop target indicator circle
-  const originClasses = {
-    "top-left": "top-0 left-0 translate-x-0 translate-y-0",
-    "top-right": "top-0 right-0 translate-x-0 translate-y-0",
-    "bottom-left": "bottom-0 left-0 translate-x-0 translate-y-0",
-    "bottom-right": "bottom-0 right-0 translate-x-0 translate-y-0",
-  };
-
+function DroppableCorner({ id, position }: DroppableCornerProps) {
   const { ref, isDropTarget } = useDroppable({
     id,
     collisionDetector: closestCorners,
@@ -108,16 +147,13 @@ function DroppableCorner({ id, position, children }: DroppableCornerProps) {
   return (
     <div
       ref={ref}
-      className={`fixed ${positionClasses[position]} z-100 flex max-h-screen max-w-full flex-col p-2 ${alignmentClasses[position]}`}
+      className={`fixed ${POSITION_CLASSES[position]} z-90 h-40 w-40 p-2`}
     >
       <div
-        className={`pointer-events-none absolute ${originClasses[position]} z-0 m-1 h-14 w-14 rounded-full bg-gray-600 transition-opacity duration-300 ${
+        className={`pointer-events-none absolute ${ORIGIN_CLASSES[position]} z-0 m-1 h-14 w-14 rounded-full bg-gray-600 transition-opacity duration-300 ${
           isDropTarget ? "opacity-60" : "opacity-0"
         }`}
       />
-      <div className="z-10 max-h-[calc(100vh-1rem)] max-w-[calc(100vw-1rem)] overflow-auto">
-        {children}
-      </div>
     </div>
   );
 }

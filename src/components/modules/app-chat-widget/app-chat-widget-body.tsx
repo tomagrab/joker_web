@@ -1,18 +1,20 @@
 import { AppChatWidgetPendingMessage } from "@/components/modules/app-chat-widget/app-chat-widget-pending-message";
 import { Spinner } from "@/components/ui/spinner";
 import type { AppChatWidgetMessage } from "@/lib/types/chat-widget/chat-widget-types";
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 
 type AppChatWidgetBodyProps = {
   messages: AppChatWidgetMessage[];
   isLoading: boolean;
   isConfigured: boolean;
+  isDragging: boolean;
 };
 
-export default function AppChatWidgetBody({
+const AppChatWidgetBody = memo(function AppChatWidgetBody({
   messages,
   isLoading,
   isConfigured,
+  isDragging,
 }: AppChatWidgetBodyProps) {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -70,6 +72,7 @@ export default function AppChatWidgetBody({
                   {message.status === "pending" ? (
                     <AppChatWidgetPendingMessage
                       initialMessage={message.content}
+                      isPaused={isDragging}
                     />
                   ) : message.format === "html" ? (
                     <div
@@ -91,4 +94,6 @@ export default function AppChatWidgetBody({
       )}
     </div>
   );
-}
+});
+
+export default AppChatWidgetBody;

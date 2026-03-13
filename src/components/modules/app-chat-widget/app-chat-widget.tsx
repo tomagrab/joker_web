@@ -13,6 +13,7 @@ import { AnimatePresence, motion } from "motion/react";
 type AppChatWidgetProps = {
   ref?: (element: Element | null) => void;
   handleRef?: (element: Element | null) => void;
+  isDragging?: boolean;
 };
 
 const CONTAINER_TRANSITION = {
@@ -21,7 +22,11 @@ const CONTAINER_TRANSITION = {
   damping: 30,
 };
 
-export default function AppChatWidget({ ref, handleRef }: AppChatWidgetProps) {
+export default function AppChatWidget({
+  ref,
+  handleRef,
+  isDragging = false,
+}: AppChatWidgetProps) {
   const {
     state,
     containerRef,
@@ -76,6 +81,7 @@ export default function AppChatWidget({ ref, handleRef }: AppChatWidgetProps) {
             messages={messages}
             isLoading={isSubmitting}
             isConfigured={isConfigured}
+            isDragging={isDragging}
           />
         )}
       </AnimatePresence>

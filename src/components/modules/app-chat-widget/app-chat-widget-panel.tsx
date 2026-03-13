@@ -8,7 +8,7 @@ import type {
   ChatWidgetState,
 } from "@/lib/types/chat-widget/chat-widget-types";
 import { motion } from "motion/react";
-import type { RefObject } from "react";
+import { memo, type RefObject } from "react";
 
 type ChatWidgetPanelProps = {
   isFullscreen: boolean;
@@ -21,9 +21,10 @@ type ChatWidgetPanelProps = {
   messages: AppChatWidgetMessage[];
   isLoading: boolean;
   isConfigured: boolean;
+  isDragging: boolean;
 };
 
-export function ChatWidgetPanel({
+const ChatWidgetPanel = memo(function ChatWidgetPanel({
   isFullscreen,
   onStateChange,
   handleRef,
@@ -34,6 +35,7 @@ export function ChatWidgetPanel({
   messages,
   isLoading,
   isConfigured,
+  isDragging,
 }: ChatWidgetPanelProps) {
   return (
     <motion.div
@@ -50,6 +52,7 @@ export function ChatWidgetPanel({
           messages={messages}
           isLoading={isLoading}
           isConfigured={isConfigured}
+          isDragging={isDragging}
         />
       </div>
       <AppChatWidgetFooter
@@ -63,4 +66,6 @@ export function ChatWidgetPanel({
       />
     </motion.div>
   );
-}
+});
+
+export { ChatWidgetPanel };
