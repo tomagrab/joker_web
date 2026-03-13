@@ -1,12 +1,12 @@
 "use client";
 
+import AppChatWidgetContext from "@/components/contexts/app-chat-widget/app-chat-widget-context";
 import AppChatWidget from "@/components/modules/app-chat-widget/app-chat-widget";
 import type { UniqueIdentifier } from "@dnd-kit/abstract";
 import { closestCorners } from "@dnd-kit/collision";
 import { RestrictToWindow } from "@dnd-kit/dom/modifiers";
 import { DragDropProvider, useDraggable, useDroppable } from "@dnd-kit/react";
 import { ReactNode, useContext, useState } from "react";
-import AppChatWidgetContext from "../../contexts/app-chat-widget/app-chat-widget-context";
 
 type ChatDnDProviderProps = {
   children: ReactNode;

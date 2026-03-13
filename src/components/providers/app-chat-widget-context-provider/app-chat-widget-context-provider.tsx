@@ -1,8 +1,8 @@
 "use client";
 
+import AppChatWidgetContext from "@/components/contexts/app-chat-widget/app-chat-widget-context";
 import { ChatWidgetState } from "@/lib/types/chat-widget/chat-widget-types";
 import { Dispatch, ReactNode, SetStateAction, useState } from "react";
-import AppChatWidgetContext from "../../contexts/app-chat-widget/app-chat-widget-context";
 
 type AppChatWidgetProviderProps = {
   initialState?: ChatWidgetState;

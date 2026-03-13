@@ -1,5 +1,11 @@
 "use client";
 
+import { DataTableBodyCell } from "@/components/modules/data-table//data-table-body-cell";
+import { DataTableEmptyState } from "@/components/modules/data-table//data-table-empty-state";
+import { DataTableHeaderCell } from "@/components/modules/data-table//data-table-header-cell";
+import { DataTablePagination } from "@/components/modules/data-table//data-table-pagination";
+import { DataTableSkeletonRows } from "@/components/modules/data-table//data-table-skeleton";
+import { DataTableToolbar } from "@/components/modules/data-table//data-table-toolbar";
 import {
   TableBody,
   TableCell,
@@ -34,12 +40,6 @@ import {
 } from "@tanstack/react-table";
 import { useVirtualizer } from "@tanstack/react-virtual";
 import * as React from "react";
-import { DataTableBodyCell } from "./data-table-body-cell";
-import { DataTableEmptyState } from "./data-table-empty-state";
-import { DataTableHeaderCell } from "./data-table-header-cell";
-import { DataTablePagination } from "./data-table-pagination";
-import { DataTableSkeletonRows } from "./data-table-skeleton";
-import { DataTableToolbar } from "./data-table-toolbar";
 
 export default function DataTable<TData, TValue>({
   columns,
@@ -524,29 +524,29 @@ export default function DataTable<TData, TValue>({
 }
 
 // Re-export reusable components for flexibility
-export { DataTableBodyCell } from "./data-table-body-cell";
-export { DataTableColumnCell } from "./data-table-column-cell";
-export { DataTableColumnHeader } from "./data-table-column-header";
+export { DataTableBodyCell } from "@/components/modules/data-table//data-table-body-cell";
+export { DataTableColumnCell } from "@/components/modules/data-table//data-table-column-cell";
+export { DataTableColumnHeader } from "@/components/modules/data-table//data-table-column-header";
 export {
   createActionsColumn,
   createExpandColumn,
   createIndexColumn,
   createSelectColumn,
-} from "./data-table-column-helpers";
-export { DataTableEmptyState } from "./data-table-empty-state";
-export { DataTableExpandButton } from "./data-table-expand-button";
-export { DataTableFacetedFilter } from "./data-table-faceted-filter";
-export { DataTableGlobalFilter } from "./data-table-global-filter";
-export { DataTableHeaderCell } from "./data-table-header-cell";
-export { DataTablePagination } from "./data-table-pagination";
-export { DataTableRangeFilter } from "./data-table-range-filter";
+} from "@/components/modules/data-table//data-table-column-helpers";
+export { DataTableEmptyState } from "@/components/modules/data-table//data-table-empty-state";
+export { DataTableExpandButton } from "@/components/modules/data-table//data-table-expand-button";
+export { DataTableFacetedFilter } from "@/components/modules/data-table//data-table-faceted-filter";
+export { DataTableGlobalFilter } from "@/components/modules/data-table//data-table-global-filter";
+export { DataTableHeaderCell } from "@/components/modules/data-table//data-table-header-cell";
+export { DataTablePagination } from "@/components/modules/data-table//data-table-pagination";
+export { DataTableRangeFilter } from "@/components/modules/data-table//data-table-range-filter";
 export {
   DataTableRowCheckbox,
   DataTableSelectAllCheckbox,
-} from "./data-table-row-checkbox";
-export { DataTableSkeletonRows } from "./data-table-skeleton";
-export { DataTableToolbar } from "./data-table-toolbar";
-export { DataTableViewOptions } from "./data-table-view-options";
+} from "@/components/modules/data-table//data-table-row-checkbox";
+export { DataTableSkeletonRows } from "@/components/modules/data-table//data-table-skeleton";
+export { DataTableToolbar } from "@/components/modules/data-table//data-table-toolbar";
+export { DataTableViewOptions } from "@/components/modules/data-table//data-table-view-options";
 
 // Re-export types for convenience
 export type {
@@ -562,7 +562,7 @@ export type {
   SortingState,
   Table,
   VisibilityState,
-} from "../../../lib/types/data-table/data-table-types";
+} from "@/lib/types/data-table/data-table-types";
 
 // Re-export filter functions for custom filter implementations
 export {

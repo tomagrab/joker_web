@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-table";
 import * as React from "react";
 
-import { DEFAULT_FIXED_COLUMN_IDS } from "./use-column-pinning";
+import { DEFAULT_FIXED_COLUMN_IDS } from "@/hooks/data-table/use-column-pinning";
 
 interface UseColumnOrderingOptions<TData, TValue> {
   /**

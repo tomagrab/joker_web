@@ -1,9 +1,6 @@
 "use client";
 
-import { ColumnDef, Row } from "@tanstack/react-table";
-import { MoreHorizontalIcon } from "lucide-react";
-import * as React from "react";
-
+import { DataTableExpandButton } from "@/components/modules/data-table/data-table-expand-button";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -14,8 +11,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
-import { DataTableExpandButton } from "./data-table-expand-button";
+import { ColumnDef, Row } from "@tanstack/react-table";
+import { MoreHorizontalIcon } from "lucide-react";
+import * as React from "react";
 
 // ============================================================================
 // Select Column Helper

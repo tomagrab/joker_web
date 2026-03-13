@@ -1,5 +1,5 @@
+import ModeToggle from "@/components/modules/mode/mode-toggle/mode-toggle";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import ModeToggle from "../mode/mode-toggle/mode-toggle";
 
 type AppHeaderProps = Readonly<{
   appHeader?: string;

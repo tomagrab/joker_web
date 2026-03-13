@@ -1,13 +1,11 @@
 "use client";
 
+import { DataTableGlobalFilter } from "@/components/modules/data-table/data-table-global-filter";
+import { DataTableViewOptions } from "@/components/modules/data-table/data-table-view-options";
+import { Button } from "@/components/ui/button";
 import { Table } from "@tanstack/react-table";
 import { XIcon } from "lucide-react";
 import * as React from "react";
-
-import { Button } from "@/components/ui/button";
-
-import { DataTableGlobalFilter } from "./data-table-global-filter";
-import { DataTableViewOptions } from "./data-table-view-options";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>;
