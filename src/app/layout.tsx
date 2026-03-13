@@ -3,6 +3,7 @@ import AppHeader from "@/components/modules/app-header/app-header";
 import AppSidebar from "@/components/modules/app-sidebar/app-sidebar";
 import { AppChatWidgetProvider } from "@/components/providers/app-chat-widget-context-provider/app-chat-widget-context-provider";
 import AppChatWidgetDnDProvider from "@/components/providers/app-chat-widget-dnd/app-chat-widget-dnd-provider";
+import { BreadcrumbsProvider } from "@/components/providers/breadcrumbs/breadcrumbs-provider";
 import { ThemeProvider } from "@/components/providers/theme/theme-provider";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -65,21 +66,25 @@ export default async function RootLayout({
                 {sidebarVariant === "inset" ? (
                   <SidebarInset className="border-gold min-h-0 overflow-hidden border">
                     <TooltipProvider>
-                      <AppHeader />
-                      <main className="min-h-0 flex-1 overflow-auto">
-                        {children}
-                      </main>
-                      <AppFooter />
+                      <BreadcrumbsProvider>
+                        <AppHeader />
+                        <main className="min-h-0 flex-1 overflow-auto">
+                          {children}
+                        </main>
+                        <AppFooter />
+                      </BreadcrumbsProvider>
                     </TooltipProvider>
                   </SidebarInset>
                 ) : (
                   <div className="flex min-h-0 flex-1 flex-col overflow-hidden">
                     <TooltipProvider>
-                      <AppHeader />
-                      <main className="min-h-0 flex-1 overflow-auto">
-                        {children}
-                      </main>
-                      <AppFooter />
+                      <BreadcrumbsProvider>
+                        <AppHeader />
+                        <main className="min-h-0 flex-1 overflow-auto">
+                          {children}
+                        </main>
+                        <AppFooter />
+                      </BreadcrumbsProvider>
                     </TooltipProvider>
                   </div>
                 )}
