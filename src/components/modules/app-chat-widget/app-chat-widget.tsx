@@ -1,7 +1,7 @@
 "use client";
 
-import { ChatWidgetClosed } from "@/components/modules/app-chat-widget//app-chat-widget-closed";
-import { ChatWidgetPanel } from "@/components/modules/app-chat-widget//app-chat-widget-panel";
+import { ChatWidgetClosed } from "@/components/modules/app-chat-widget/app-chat-widget-closed";
+import { ChatWidgetPanel } from "@/components/modules/app-chat-widget/app-chat-widget-panel";
 import { useChatWidgetState } from "@/hooks/app-chat-widget/use-chat-widget-state";
 import { useStonlyApi } from "@/hooks/stonly/use-stonly-api";
 import {
@@ -12,6 +12,7 @@ import {
   appChatWidgetStonlyConfig,
   createAppChatWidgetMessageId,
   focusAppChatWidgetInput,
+  getRandomAppChatWidgetLoadingMessage,
 } from "@/lib/helpers/app-chat-widget/app-chat-widget-stonly-helpers";
 import type { AppChatWidgetMessage } from "@/lib/types/chat-widget/chat-widget-types";
 import { AnimatePresence, motion } from "motion/react";
@@ -69,7 +70,7 @@ export default function AppChatWidget({ ref, handleRef }: AppChatWidgetProps) {
       {
         id: pendingMessageId,
         role: "assistant",
-        content: "Stonly is working on your answer...",
+        content: getRandomAppChatWidgetLoadingMessage(),
         status: "pending",
         format: "text",
       },

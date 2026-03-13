@@ -68,13 +68,6 @@ export default function AppChatWidgetFooter({
           )}
         </Button>
       </div>
-      <p className="text-muted-foreground px-2 text-xs">
-        {isLoading
-          ? "Stonly can take a few seconds to answer."
-          : isConfigured
-            ? "Press Enter to send. Use Shift+Enter for a new line."
-            : "Set NEXT_PUBLIC_STONLY_AI_AGENT_ID to enable Stonly chat."}
-      </p>
     </form>
   );
 }

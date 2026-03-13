@@ -1,8 +1,8 @@
 "use client";
 
-import AppChatWidgetFooter from "@/components/modules/app-chat-widget//app-chat-widget-footer";
-import AppChatWidgetHeader from "@/components/modules/app-chat-widget//app-chat-widget-header";
 import AppChatWidgetBody from "@/components/modules/app-chat-widget/app-chat-widget-body";
+import AppChatWidgetFooter from "@/components/modules/app-chat-widget/app-chat-widget-footer";
+import AppChatWidgetHeader from "@/components/modules/app-chat-widget/app-chat-widget-header";
 import type {
   AppChatWidgetMessage,
   ChatWidgetState,

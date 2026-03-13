@@ -1,8 +1,8 @@
 import type { ChatWidgetState } from "@/lib/types/chat-widget/chat-widget-types";
 
 const CLOSED_SIZE = 56;
-const OPEN_WIDTH = 300;
-const OPEN_HEIGHT = 500;
+const OPEN_WIDTH = 400;
+const OPEN_HEIGHT = 600;
 
 /**
  * Returns the Tailwind className string for the chat widget container
@@ -12,7 +12,7 @@ export function getContainerClassName(
   state: ChatWidgetState,
   needsFixed: boolean,
 ): string {
-  const base = "flex flex-col overflow-hidden bg-blue-500";
+  const base = "flex flex-col overflow-hidden bg-gold";
   const stateClass =
     state === "closed" ? "cursor-pointer items-center justify-center" : "";
   const fixedClass = needsFixed ? "fixed z-50" : "";

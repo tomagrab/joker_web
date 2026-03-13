@@ -166,3 +166,29 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes app-chat-widget-shimmer {
+  0% {
+    background-position: 200% 50%;
+  }
+
+  100% {
+    background-position: -200% 50%;
+  }
+}
+
+@layer utilities {
+  .app-chat-widget-shimmer {
+    background-image: linear-gradient(
+      90deg,
+      color-mix(in oklab, var(--color-muted-foreground) 82%, white 18%) 0%,
+      color-mix(in oklab, var(--color-primary) 45%, white 55%) 45%,
+      color-mix(in oklab, var(--color-muted-foreground) 82%, white 18%) 100%
+    );
+    background-size: 220% 100%;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    animation: app-chat-widget-shimmer 2.6s linear infinite;
+  }
+}

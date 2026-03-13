@@ -28,12 +28,12 @@ export default function AppChatWidgetHeader({
         )}
       </div>
       <div className="flex flex-1 justify-center">
-        <h3 className="font-bold">Chatter</h3>
+        <h3 className="font-bold">🤡🤖</h3>
       </div>
       <div className="flex flex-1 justify-end">
         {handleRef ? (
           <button
-            className="hover:bg-accent/15 hover:shadow-primary/20 rounded-full p-1.5 text-sm transition-all duration-200 hover:shadow-[0_0_10px_2px]"
+            className="hover:bg-accent/15 hover:shadow-primary/20 cursor-pointer rounded-full p-1.5 text-sm transition-all duration-200 hover:shadow-[0_0_10px_2px]"
             onClick={(e) => {
               e.stopPropagation();
               onStateChange("fullscreen");
@@ -43,7 +43,7 @@ export default function AppChatWidgetHeader({
           </button>
         ) : (
           <button
-            className="hover:bg-accent/15 hover:shadow-primary/20 rounded-full p-1.5 text-sm transition-all duration-200 hover:shadow-[0_0_10px_2px]"
+            className="hover:bg-accent/15 hover:shadow-primary/20 cursor-pointer rounded-full p-1.5 text-sm transition-all duration-200 hover:shadow-[0_0_10px_2px]"
             onClick={(e) => {
               e.stopPropagation();
               onStateChange("open");
@@ -54,7 +54,7 @@ export default function AppChatWidgetHeader({
         )}
 
         <button
-          className="hover:bg-accent/15 hover:shadow-primary/20 rounded-full p-1.5 text-sm transition-all duration-200 hover:shadow-[0_0_10px_2px]"
+          className="hover:bg-accent/15 hover:shadow-primary/20 cursor-pointer rounded-full p-1.5 text-sm transition-all duration-200 hover:shadow-[0_0_10px_2px]"
           onClick={(e) => {
             e.stopPropagation();
             onStateChange("closed");
