@@ -1,10 +1,10 @@
 import { fetchRandomJoke } from "@/lib/server/actions/joke/joke-server-actions";
-import { ApiResult } from "@/lib/types/api/common/api-common-types";
+import { ApiResponse } from "@/lib/types/api/common/api-common-types";
 import { JokeType } from "@/lib/types/api/joke/joke-types";
 import { use, useState } from "react";
 
 type useJokeProps = {
-  serverJoke: Promise<ApiResult<JokeType>>;
+  serverJoke: Promise<ApiResponse<JokeType>>;
 };
 
 export default function useJoke({ serverJoke }: useJokeProps) {
@@ -12,11 +12,12 @@ export default function useJoke({ serverJoke }: useJokeProps) {
   const [error, setError] = useState<string | null>(null);
   const initialJokeRequest = use(serverJoke);
 
-  const initialJoke: ApiResult<JokeType> = initialJokeRequest.success
+  const initialJoke: ApiResponse<JokeType> = initialJokeRequest.success
     ? initialJokeRequest
     : {
         success: false,
-        error: { message: "Failed to load joke", status: 500 },
+        message: "Failed to load joke",
+        data: null,
       };
 
   const [joke, setJoke] = useState(
@@ -30,11 +31,11 @@ export default function useJoke({ serverJoke }: useJokeProps) {
     setError(null);
     try {
       const newJoke = await fetchRandomJoke();
-      if (newJoke.success) {
+      if (newJoke.success && newJoke.data) {
         setJoke(newJoke.data);
       } else {
-        console.error("Failed to fetch new joke:", newJoke.error.message);
-        setError(newJoke.error.message);
+        console.error("Failed to fetch new joke:", newJoke.message);
+        setError(newJoke.message);
       }
     } catch (error) {
       console.error("An error occurred while fetching a new joke:", error);

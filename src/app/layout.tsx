@@ -63,7 +63,7 @@ export default async function RootLayout({
               >
                 <AppSidebar variant={sidebarVariant} />
                 {sidebarVariant === "inset" ? (
-                  <SidebarInset className="min-h-0 overflow-hidden">
+                  <SidebarInset className="border-gold min-h-0 overflow-hidden border">
                     <TooltipProvider>
                       <AppHeader />
                       <main className="min-h-0 flex-1 overflow-auto">
