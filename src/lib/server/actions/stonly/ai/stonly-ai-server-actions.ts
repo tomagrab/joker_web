@@ -7,7 +7,6 @@ import {
   type StonlyAiSearchApiResponse,
   type StonlyAiSearchRequest,
   StonlyAiAnswerStatusApiResponse,
-  StonlyAiApiRequestOptions,
   StonlyAiGuideRecommendationRequest,
   StonlyAiRecommendGuidesApiResponse,
   StonlyAiSearchAndAnswerApiResponse,
@@ -15,35 +14,30 @@ import {
 
 export async function stonlyAiSearch(
   request: StonlyAiSearchRequest,
-  options?: StonlyAiApiRequestOptions,
 ): Promise<StonlyAiSearchApiResponse> {
-  return await StonlyAiApi.search(request, options);
+  return StonlyAiApi.search(request);
 }
 
 export async function stonlyAiGetAnswer(
   params: StonlyAiAnswerQueryParams,
-  options?: StonlyAiApiRequestOptions,
 ): Promise<StonlyAiAnswerApiResponse> {
-  return await StonlyAiApi.getAnswer(params, options);
+  return StonlyAiApi.getAnswer(params);
 }
 
 export async function stonlyAiGetAnswerStatus(
   params: StonlyAiAnswerQueryParams,
-  options?: StonlyAiApiRequestOptions,
 ): Promise<StonlyAiAnswerStatusApiResponse> {
-  return await StonlyAiApi.getAnswerStatus(params, options);
+  return StonlyAiApi.getAnswerStatus(params);
 }
 
 export async function stonlyAiSearchAndAnswer(
   request: StonlyAiSearchRequest,
-  options?: StonlyAiApiRequestOptions,
 ): Promise<StonlyAiSearchAndAnswerApiResponse> {
-  return await StonlyAiApi.searchAndAnswer(request, options);
+  return StonlyAiApi.searchAndAnswer(request);
 }
 
-export async function stonlyAiRecommnededGuides(
+export async function stonlyAiRecommendedGuides(
   request: StonlyAiGuideRecommendationRequest,
-  options?: StonlyAiApiRequestOptions,
 ): Promise<StonlyAiRecommendGuidesApiResponse> {
-  return await StonlyAiApi.recommendGuides(request, options);
+  return StonlyAiApi.recommendGuides(request);
 }
