@@ -1,9 +1,4 @@
-export type ChatWidgetState =
-  | "closed"
-  | "open"
-  | "fullscreen"
-  | null
-  | undefined;
+export type ChatWidgetState = "closed" | "open" | "fullscreen";
 
 export type AppChatWidgetMessage = {
   id: string;

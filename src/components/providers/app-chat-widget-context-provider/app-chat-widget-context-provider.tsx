@@ -2,7 +2,7 @@
 
 import AppChatWidgetContext from "@/components/contexts/app-chat-widget/app-chat-widget-context";
 import { ChatWidgetState } from "@/lib/types/chat-widget/chat-widget-types";
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import { ReactNode, useState } from "react";
 
 type AppChatWidgetProviderProps = {
   initialState?: ChatWidgetState;
@@ -15,9 +15,7 @@ export function AppChatWidgetProvider({
 }: AppChatWidgetProviderProps) {
   const [state, setState] = useState<ChatWidgetState>(initialState);
 
-  const setAndPersistState: Dispatch<SetStateAction<ChatWidgetState>> = (
-    newState,
-  ) => {
+  const setAndPersistState = (newState: ChatWidgetState) => {
     setState(newState);
     document.cookie = `chat_widget_state=${newState}; path=/; max-age=${60 * 60 * 24 * 30}`;
   };

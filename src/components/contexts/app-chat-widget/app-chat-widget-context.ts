@@ -1,13 +1,13 @@
 import { ChatWidgetState } from "@/lib/types/chat-widget/chat-widget-types";
-import { createContext, Dispatch, SetStateAction } from "react";
+import { createContext } from "react";
 
 type AppChatWidgetContextType = {
   state: ChatWidgetState;
-  setAndPersistState: Dispatch<SetStateAction<ChatWidgetState>>;
+  setAndPersistState: (state: ChatWidgetState) => void;
 };
 
 const AppChatWidgetContext = createContext<AppChatWidgetContextType>({
-  state: null,
+  state: "open",
   setAndPersistState: () => {},
 });
 
