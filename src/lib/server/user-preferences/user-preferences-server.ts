@@ -8,10 +8,10 @@ import type { UserPreferences } from "@/lib/types/preferences/user-preferences-t
 import {
   applyLegacyPreferenceCookies,
   createDefaultUserPreferences,
+  getUserPreferencesCookieEntries,
   mergeUserPreferences,
   normalizeUserPreferences,
   parseUserPreferencesCookie,
-  serializeUserPreferencesCookie,
   USER_PREFERENCES_COOKIE_MAX_AGE,
   USER_PREFERENCES_COOKIE_NAME,
 } from "@/lib/user-preferences/user-preferences";
@@ -63,33 +63,9 @@ export function writeUserPreferencesToCookieStore(
   cookieStore: CookieStoreWriter,
   preferences: UserPreferences,
 ) {
-  const normalizedPreferences = normalizeUserPreferences(preferences);
-
-  cookieStore.set(
-    USER_PREFERENCES_COOKIE_NAME,
-    serializeUserPreferencesCookie(normalizedPreferences),
-    LEGACY_COOKIE_OPTIONS,
-  );
-  cookieStore.set(
-    "sidebar_state",
-    String(normalizedPreferences.sidebar.open),
-    LEGACY_COOKIE_OPTIONS,
-  );
-  cookieStore.set(
-    "sidebar_variant",
-    normalizedPreferences.sidebar.variant,
-    LEGACY_COOKIE_OPTIONS,
-  );
-  cookieStore.set(
-    "chat_widget_state",
-    normalizedPreferences.chatWidget.state,
-    LEGACY_COOKIE_OPTIONS,
-  );
-  cookieStore.set(
-    "chat_widget_position",
-    normalizedPreferences.chatWidget.position,
-    LEGACY_COOKIE_OPTIONS,
-  );
+  for (const cookie of getUserPreferencesCookieEntries(preferences)) {
+    cookieStore.set(cookie.name, cookie.value, LEGACY_COOKIE_OPTIONS);
+  }
 }
 
 export async function loadUserPreferences(): Promise<UserPreferences> {

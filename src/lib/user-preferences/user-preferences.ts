@@ -12,6 +12,11 @@ import type {
 export const USER_PREFERENCES_COOKIE_NAME = "user_preferences";
 export const USER_PREFERENCES_COOKIE_MAX_AGE = 60 * 60 * 24 * 30;
 
+type UserPreferenceCookieEntry = {
+  name: string;
+  value: string;
+};
+
 const VALID_SIDEBAR_VARIANTS = ["sidebar", "floating", "inset"] as const;
 const VALID_CHAT_WIDGET_STATES = ["closed", "open", "fullscreen"] as const;
 const VALID_CHAT_WIDGET_POSITIONS = [
@@ -130,6 +135,50 @@ export function mergeUserPreferences(
       ...patch.chatWidget,
     },
   });
+}
+
+export function createUserPreferencesSnapshot(
+  preferences: UserPreferences,
+): string {
+  return JSON.stringify(normalizeUserPreferences(preferences));
+}
+
+export function areUserPreferencesEqual(
+  left: UserPreferences,
+  right: UserPreferences,
+): boolean {
+  return (
+    createUserPreferencesSnapshot(left) === createUserPreferencesSnapshot(right)
+  );
+}
+
+export function getUserPreferencesCookieEntries(
+  preferences: UserPreferences,
+): UserPreferenceCookieEntry[] {
+  const normalizedPreferences = normalizeUserPreferences(preferences);
+
+  return [
+    {
+      name: USER_PREFERENCES_COOKIE_NAME,
+      value: serializeUserPreferencesCookie(normalizedPreferences),
+    },
+    {
+      name: "sidebar_state",
+      value: String(normalizedPreferences.sidebar.open),
+    },
+    {
+      name: "sidebar_variant",
+      value: normalizedPreferences.sidebar.variant,
+    },
+    {
+      name: "chat_widget_state",
+      value: normalizedPreferences.chatWidget.state,
+    },
+    {
+      name: "chat_widget_position",
+      value: normalizedPreferences.chatWidget.position,
+    },
+  ];
 }
 
 export function serializeUserPreferencesCookie(
